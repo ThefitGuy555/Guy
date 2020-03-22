@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>CSS Template</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+
+        }
+
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: black;
+        }
+
+
+        header {
+            background-color: black;
+            padding: 30px;
+            text-align: center;
+            font-size: 35px;
+            color: pink;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+        }
+
+
+        section {
+            display: -webkit-flex;
+            display: flex;
+        }
+
+        nav {
+            float: left;
+            width: 20%;
+            height: 800px;
+            background-color: black;
+            padding: 50px;
+            font-size: x-large;
+
+        }
+
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            border-style: groove;
+        }
+
+        article {
+            float: left;
+            padding: 0px;
+            width: 100%;
+            background-color: black;
+        }
+
+
+        footer {
+            background-color: #777;
+            padding: 10px;
+            text-align: center;
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            section {
+                -webkit-flex-direction: column;
+                flex-direction: column;
+            }
+        }
+
+        ul {
+            color: pink;
+            padding: 30px;
+            text-align: center;
+        }
+
+        li {
+            float: center;
+            padding: 30px;
+        }
+
+        li a {
+            display: block;
+            color: pink;
+            text-decoration: none;
+            padding: 30px;
+        }
+
+
+        .hvr-grow {
+            display: inline-block;
+            vertical-align: middle;
+            -webkit-transform: perspective(1px) translateZ(0);
+            transform: perspective(1px) translateZ(0);
+            box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+            -webkit-transition-duration: 0.3s;
+            transition-duration: 0.3s;
+            -webkit-transition-property: transform;
+            transition-property: transform;
+        }
+
+        .hvr-grow:hover,
+        .hvr-grow:focus,
+        .hvr-grow:active {
+            -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+        }
+
+        a.button2{
+display:inline-block;
+padding:0.5em 3em;
+border:0.16em solid #FFFFFF;
+margin:0 0.3em 0.3em 0;
+box-sizing: border-box;
+text-decoration:none;
+text-transform:uppercase;
+font-family:'Roboto',sans-serif;
+font-weight:400;
+color:#FFFFFF;
+text-align:center;
+transition: all 0.15s;
+}
+a.button2:hover{
+color:#DDDDDD;
+border-color:#DDDDDD;
+}
+a.button2:active{
+color:#BBBBBB;
+border-color:#BBBBBB;
+}
+@media all and (max-width:30em){
+ a.button2{
+display:block;
+margin:0.4em auto;
+}
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+select {
+  margin-bottom: 1em;
+  padding: .25em;
+  border: 0;
+  border-bottom: 2px solid currentcolor; 
+  font-weight: bold;
+  letter-spacing: .15em;
+  border-radius: 0;
+  &:focus, &:active {
+    outline: 0;
+    border-bottom-color: red;
+  }
+}
+
+.images {
+  width: 300px;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px 3px 3px 3px;
+  overflow: hidden;
+  box-shadow: 0 20px 15px -15px rgba(#000, .5);
+  img,
+  .loader,
+  .no-selection {
+    display: none;
+    letter-spacing: .15em;
+    font-weight: bold;
+  }
+  &[data-selected=""]:not(.loading) {
+    background: #eee;
+    .no-selection {
+      display: block;
+    }
+  }
+  &.loading {
+    background: #eee;
+    .loader {
+      display: block;
+      animation: loading 1.5s linear;
+    }
+  }
+}
+@for $i from 1 through 5 {
+  .images[data-selected="#{$i}"] {
+    img[data-image="#{$i}"] {
+      display: block;
+    }
+  }
+}
+
+@keyframes loading {
+  to {
+    letter-spacing: .25em;
+  }
+}
+    </style>
+</head>
+
+<body>
+    
+    <header>
+        <a href="/pages/index.html">
+        <img src="/images/sg50.png" width="80%" style="max-width:100%;height:auto;">
+        </a>
+        <h2>Nutrition</h2>
+</header>
+
+    <p style="color:pink; text-align:center; font-family: Arial, Helvetica, sans-serif; font-size: 50px;">To Eat or not
+        eat, that's the question!</p><br><br>
+    <p style="text-align: center; color: palevioletred; font-size:35px;">
+        And the answer is ... TO eat!
+        Many of the trainers who want to make a change in their lifestyle and achieve quick results are mistaken in
+        thinking that eating less will necessarily get them the results they want!<br>
+        Our base at <strong>THESG50</strong> is to eat healthy and in adequate amounts, not necessarily the equivalent of eating less than
+        what you eat today!<br>
+        It is of utmost importance to choose the food sources, the timing of their eating and parallel to that, the caloric
+        expend that is achieved by scechulde exercise!</p>
+
+        <h2 style="color: grey; text-align: center; font-size: 25px;"><strong> Guy and Sapir mindset is 'coach-client' trust , and for achieving it , you getting a <i>FREE</i> First week diet-plan !</strong></h2>
+        <p style="color: grey; text-align: center; font-size: 25px;">Please choose for each meal , ingridents from our suggested list and submit your Email to get the diet-plan in a 'print ready' file direct to your mailbox :</p>
+
+        <h1>Please select option from the following</h1>
+
+        
+        
+    

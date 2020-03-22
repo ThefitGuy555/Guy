@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Cool and responsive buttons with a few lines of CSS - Federico Dossena</title>	
+<meta name="description" content="A collection of cool and very lightweight buttons that you can use on your site. No Javascript required." />
+<meta name="keywords" content="css button, bootstrap buttons, html5 button, html5, css3" />
+<meta name="author" content="Federico Dossena" />
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+<meta property="og:site_name" content="Federico Dossena"/>
+<meta property="og:image" content="https://fdossena.com/html5cool/buttons/icon.png" />
+<meta property="og:title" content="Cool and responsive buttons with a few lines of CSS" />
+<meta property="og:description" content="A collection of cool and very lightweight buttons that you can use on your site. No Javascript required." />
+<meta name="theme-color" content="#144e66"/>
+<link rel="stylesheet" type="text/css" href="basic.css?20190711" />
+<link rel="icon" href="favicon.ico" />
+<script type="text/javascript">
+String.prototype.isBlank=function(){
+	return !this || /^\s*$/.test(this);
+}
+if(!Function.prototype.bind){
+  Function.prototype.bind=function(oThis){
+    if (typeof this !== "function") throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+    var aArgs=Array.prototype.slice.call(arguments,1),fToBind=this,fNOP=function(){},fBound=function(){return fToBind.apply(this instanceof fNOP && oThis? this: oThis,aArgs.concat(Array.prototype.slice.call(arguments)));};
+    fNOP.prototype=this.prototype;
+    fBound.prototype=new fNOP();
+    return fBound;
+  };
+}
+window.I=function(i){return document.getElementById(i);};
+function escapeCode(s){
+	return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br/>').replace(/\t/g,'&emsp;&emsp;').replace(/\s/g,'&nbsp;');
+}
+function loadText(target,url,onDone,noEscape){
+	var xhr=window.XMLHttpRequest?new XMLHttpRequest():new ActiveXObject("Microsoft.XMLHTTP");
+	xhr.onreadystatechange=function(){
+		if(xhr.readyState==4&&xhr.status==200){
+			target.innerHTML=noEscape?xhr.responseText:escapeCode(xhr.responseText);
+			try{if(onDone)onDone();}catch(e){}
+		}
+	}.bind(this);
+	xhr.open("GET",url,true);
+	xhr.send();
+}
+
+//check browser and redirect to full mode if compatible
+function gotoFull(){
+	if(localStorage.noSwitch)return;
+	document.location.href="index.php"+(document.location.search.isBlank()?"":document.location.search);
+}
+if(window.XMLHttpRequest&&window.JSON&&window.localStorage&&!!window.HTMLCanvasElement&&document.createElement("div").style.animationName!==undefined&&document.createElement("div").style.flex!==undefined){	//any browser with XHR, JSON, localStorage, Canvas, CSS Animation
+	gotoFull();
+}else{
+	loadText(document.createElement("span"),"fetch_frag_info.php?p=html5cool/buttons/i.frag&random="+Math.random(),null,true);}
+
+function isMobile(){
+	return I("resp_test").offsetWidth>0;
+}
+function isDesktop(){
+	return I("resp_test").offsetWidth==0;
+}
+function isBasicMode(){
+	return true;
+}
+function onFragUnload(){}
+function loadFragment(url,pushState){
+	onFragUnload();
+	url=unescape(url);
+	document.location.href="basic.php?p="+url;
+}
+function showNav(){
+	I("nav").style.display='';
+}
+function hideNav(){
+	I("nav").style.display='none';
+}
+function showPage(){
+	I("fragment").style.display='';
+}
+function hidePage(){
+	I("fragment").style.display='none';
+}
+function openLightbox(imgUrl){
+	window.open(imgUrl,"_blank");
+}
+function closeLightbox(){}
+function flash(color){}
+
+function highlight(target,lang,escape){
+	target.className="code hljs lang-"+lang;
+	if(!I("hljs_load")){
+		setTimeout(function(){ //delay loading so ie6 doesn't crash
+			var d=document.createElement("link");
+			d.id="hljs_load"
+			d.rel="stylesheet";
+			d.href="HLJS/ai.css";
+			I("fragment").appendChild(d);}
+		,100);
+	}
+	//hljs not applied, just basic styling
+	if(escape)target.innerHTML=escapeCode(target.innerHTML);
+}
+function createCommentsForm(id,container){
+			var f=document.createElement("form");
+		var e=document.createElement("input");
+		e.name="email";
+		e.type="text";
+		e.value="Email (optional, private)";
+		var eclick=function(){if(e.clicked) return; e.value=""; e.clicked=true;}
+		e.addEventListener('click',eclick);
+		f.appendChild(e);
+		var t=document.createElement("textarea");
+		t.name="text";
+		t.rows=4;
+		t.setAttribute("placeholder","Type a comment here...");
+		f.appendChild(t);
+		var b=document.createElement("input");
+		b.type="button";
+		b.value="Post";
+		f.appendChild(b);
+		container.appendChild(f);
+		var c=document.createElement("div");
+		c.className="commentsArea";
+		container.appendChild(c);
+		b.onclick=function(){sendComment(id,t,e,c);};
+		loadComments(id,c);
+	}
+function loadComments(id,container){
+	container.innerHTML="";
+			var d=document.createElement("d");
+		d.className="loading";
+		container.appendChild(d);
+		var xhr=window.XMLHttpRequest?new XMLHttpRequest():new ActiveXObject("Microsoft.XMLHTTP");
+		xhr.onreadystatechange=function(){
+			if(xhr.readyState==4){
+				if(xhr.status==200){
+					container.innerHTML="";
+					try{
+						if(parseInt(xhr.responseText)==1){container.innerHTML="Server error"; return;}
+					}catch(e){}
+					try{
+						var comments=eval('('+xhr.responseText+')'); //JSON.parse did not exist in 2001
+						for(var i=0;i<comments.length;i++){
+							var d=document.createElement("div");
+							d.className="comment";
+							d.innerHTML=comments[i];
+							container.appendChild(d);
+						}
+					}catch(e){
+						container.innerHTML="Couldn't load comments ("+e+")";
+					}
+				}
+			}
+		}
+		xhr.open("GET","getComments.php?id="+id+"&r="+Math.random(),true);
+		xhr.send();
+	}
+var sending=false;
+function sendComment(id,t,e,commentsArea){
+	if(t.value.isBlank()||sending){ return;}
+	sending=true;
+	var text=t.value;
+	var email="";
+	if(e.clicked) email=e.value;
+	var xhr=window.XMLHttpRequest?new XMLHttpRequest():new ActiveXObject("Microsoft.XMLHTTP");
+	xhr.onreadystatechange=function(){
+		if(xhr.readyState==4){
+			sending=false;
+			if(xhr.status==200){
+				try{
+					if(parseInt(xhr.responseText)==1){return;}
+				}catch(e){alert("An error occurred, please try again"); return;}
+				t.value="";
+				loadComments(id,commentsArea);
+			}
+		}
+	}
+	var params="";
+	params+="id="+encodeURIComponent(id)+"&text="+encodeURIComponent(text)+"&email="+encodeURIComponent(email)+"&r="+Math.random();
+	xhr.open("POST","postComment.php",true);
+	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhr.setRequestHeader("Content-length", params.length);
+	xhr.setRequestHeader("Connection", "close");
+	xhr.send(params);
+}
+
+function showLoading(){
+	I("fragment").innerHTML="";
+}
+function showError(err){
+	loadFragment("error.frag?e="+err);
+}
+function setBackgroundCfg(cfg){}
+function toggleNavExp(){
+	//in mobile view, toggles the menu
+	var nav=I("nav");
+	if(nav.className.isBlank()) nav.className='expanded'; else nav.className='';
+}
+setInterval(function(){
+	try{
+		var iframes=I("fragment").getElementsByTagName("iframe");
+		for(var i=0;i<iframes.length;i++){
+			var x=iframes[i];
+			x.style.height=x.contentDocument.getElementsByTagName("body")[0].clientHeight+"px";
+		}
+	}catch(e){}
+},50);
+</script>
+<!--[if lt IE 8]>
+<script type="text/javascript">
+setInterval(function(){
+//this apparently useless piece of code fixes image stretching on IE6/7
+	try{
+		var imgs=I("fragment").getElementsByTagName("img");
+		for(var i=0;i<imgs.length;i++){
+			var x=imgs[i];
+			if(!x.complete) continue;
+			var p=x.parentNode;
+			var d=document.createElement("div");
+			p.replaceChild(d,x);
+			p.replaceChild(x,d);
+		}
+	}catch(e){}
+},1000);
+</script>
+<![endif]-->
+<style type="text/css">
+.basic_hide{
+	display:none;
+}
+</style>
+<!--[if lt IE 9]>
+<link rel="stylesheet" type="text/css" href="basic_overrides_ie.css?20170222" />
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="print.css?20170306" media="print"/>
+</head>
+<body>
+	<div id="nav" onClick="toggleNavExp()">
+		<html><body>
+<div class="content">
+	<div id="logo">Federico Dossena</div>
+	<a onclick="loadFragment('home.frag');return false;" href="/?p=home.frag">Home</a>
+	<a onclick="loadFragment('articles.php?s=1');return false;" href="/?p=articles.php?s=1">Projects</a>
+	<a onclick="loadFragment('articles.php?s=4');return false;" href="/?p=articles.php?s=4">Blog</a>
+	<a onclick="loadFragment('about.frag');return false;" href="/?p=about.frag">About me</a>
+</div>
+	</div>
+	<img id="campaign-icon" src="html5cool/buttons/icon.png" />
+	<script type="text/javascript">
+		I("campaign-icon").style.display="none";
+	</script>
+	<div id="fragment">
+		<div class="basic">
+			<html><body><div>
+<link rel="stylesheet" type="text/css" href="article.css">
+<link rel="stylesheet" type="text/css" href="html5cool/buttons/buttons.css">
+<div class="basic_only">
+<div class="stripe">
+	<div class="content">
+		<h2>Old browser</h2>
+		<div class="section">
+			This article shows off HTML5 features, don't you think it would be a good idea to read it with a browser that supports these features so you can see them?
+		</div>
+	</div>
+</div>
+</div>
+<div class="basic_hide">
+<div class="stripe">
+	<div class="content">
+		<h2>Cool and responsive buttons with a few lines of CSS</h2>
+		<div class="section">
+			<p>
+				In the last years, the web has been invaded by the cool buttons provided by libraries like Bootstrap.<br>
+				Even if these libraries are cool and feature rich, they're also really heavy, and it's a waste to load hundreds of kilobytes if you need to show just one button.
+			</p>
+		</div>
+		<div class="section">
+			<p>
+				In this article, we'll see some really cool looking responsive buttons using only a few lines of CSS.<br>
+				I will be using the <a href="https://www.google.com/fonts/specimen/Roboto" target="_blank">Roboto Light</a> font a lot, so you might want to download it.<br>
+				You are free to copy, modify and use this code as you wish.
+			</p>
+		</div>
+		<div class="section">
+			<p>
+				All the buttons shown here can scale accordingly to the font-size attribute, and should work in any relatively recent browser.
+			</p>
+		</div>
+	</div>
+</div>
+<div class="stripe">
+	<div class="content">
+		<h3>Button 1</h3>
+		<div class="section">
+			<div class="section">
+				<a href="javascript:alert('Infinite%20joy!')" class="button1">Button</a>
+				<a href="javascript:alert('Infinite%20joy!')" class="button1">Another button</a>
+			</div>
+			<h6>CSS</h6>
+			<div class="section">
+			<div class="code" id="b1c">
+				a.button1{<br>
+				 display:inline-block;<br>
+				 padding:0.35em 1.2em;<br>
+				 border:0.1em solid #FFFFFF;<br>
+				 margin:0 0.3em 0.3em 0;<br>
+				 border-radius:0.12em;<br>
+				 box-sizing: border-box;<br>
+				 text-decoration:none;<br>
+				 font-family:'Roboto',sans-serif;<br>
+				 font-weight:300;<br>
+				 color:#FFFFFF;<br>
+				 text-align:center;<br>
+				 transition: all 0.2s;<br>
+				}<br>
+				a.button1:hover{<br>
+				 color:#000000;<br>
+				 background-color:#FFFFFF;<br>
+				}<br>
+				@media all and (max-width:30em){<br>
+				 a.button1{<br>
+				  display:block;<br>
+				  margin:0.4em auto;<br>
+				 }<br>
+				}
+			</div>
+			<script type="text/javascript">highlight(I("b1c"),"css");</script>
+			</div>
+			<h6>HTML</h6>
+			<div class="section">
+			<div class="code" id="b1h">
+				&lt;a href="something" class="button1"&gt;Button&amp;lt/a&gt;<br>
+				&lt;a href="something" class="button1"&gt;Another button&amp;lt/a&gt;<br>
+			</div>
+			<script type="text/javascript">highlight(I("b1h"),"xml");</script>
+			</div>
+		</div>
+		
+</div>
+</div>
+		
+<div class="stripe">
+	<div class="content">
+		<h3>Button 2</h3>
+		<div class="section">
+			<div class="section" style="padding:4em 0; background-image:url('html5cool/buttons/orangeBk.png'); background-size:cover; text-align:center">
+				<a href="javascript:alert('Infinite%20joy!')" class="button2">Button</a>
+				<a href="javascript:alert('Infinite%20joy!')" class="button2">Very pretentious long button</a>
+			</div>
+			<h6>CSS</h6>
+			<div class="section">
+			<div class="code" id="b2c">
+				a.button2{<br>
+				 display:inline-block;<br>
+				 padding:0.5em 3em;<br>
+				 border:0.16em solid #FFFFFF;<br>
+				 margin:0 0.3em 0.3em 0;<br>
+				 box-sizing: border-box;<br>
+				 text-decoration:none;<br>
+				 text-transform:uppercase;<br>
+				 font-family:'Roboto',sans-serif;<br>
+				 font-weight:400;<br>
+				 color:#FFFFFF;<br>
+				 text-align:center;<br>
+				 transition: all 0.15s;<br>
+				}<br>
+				a.button2:hover{<br>
+				 color:#DDDDDD;<br>
+				 border-color:#DDDDDD;<br>
+				}<br>
+				a.button2:active{<br>
+				 color:#BBBBBB;<br>
+				 border-color:#BBBBBB;<br>
+				}<br>
+				@media all and (max-width:30em){<br>
+				 a.button2{<br>
+				  display:block;<br>
+				  margin:0.4em auto;<br>
+				 }<br>
+				}
+			</div>
+			<script type="text/javascript">highlight(I("b2c"),"css");</script>
+			</div>
+			<h6>HTML</h6>
+			<div class="section">
+			<div class="code" id="b2h">
+				&lt;a href="something" class="button2"&gt;Button&amp;lt/a&gt;<br>
+				&lt;a href="something" class="button2"&gt;Very pretentious long button&amp;lt/a&gt;
+			</div>
+			<script type="text/javascript">highlight(I("b2h"),"xml");</script>
+			</div>
+		</div>
+		
+</div>
+</div>
+		
+<div class="stripe">
+	<div class="content">
+		<h3>Button 3</h3>
+		<div class="section">
+			<div class="section">
+				<a href="javascript:alert('Infinite%20joy!')" class="button3">Button</a>
+				<a href="javascript:alert('Infinite%20joy!')" class="button3">It's getting old</a>
+			</div>
+			<h6>CSS</h6>
+			<div class="section">
+			<div class="code" id="b3c">
+				a.button3{<br>
+				 display:inline-block;<br>
+				 padding:0.3em 1.2em;<br>
+				 margin:0 0.3em 0.3em 0;<br>
+				 border-radius:2em;<br>
+				 box-sizing: border-box;<br>
+				 text-decoration:none;<br>
+				 font-family:'Roboto',sans-serif;<br>
+				 font-weight:300;<br>
+				 color:#FFFFFF;<br>
+				 background-color:#4eb5f1;<br>
+				 text-align:center;<br>
+				 transition: all 0.2s;<br>
+				}<br>
+				a.button3:hover{<br>
+				 background-color:#4095c6;<br>
+				}<br>
+				@media all and (max-width:30em){<br>
+				 a.button3{<br>
+				  display:block;<br>
+				  margin:0.2em auto;<br>
+				 }<br>
+				}
+			</div>
+			<script type="text/javascript">highlight(I("b3c"),"css");</script>
+			</div>
+			<h6>HTML</h6>
+			<div class="section">
+			<div class="code" id="b3h">
+				&lt;a href="something" class="button3"&gt;Button&amp;lt/a&gt;<br>
+				&lt;a href="something" class="button3"&gt;It's getting old&amp;lt/a&gt;
+			</div>
+			<script type="text/javascript">highlight(I("b3h"),"xml");</script>
+			</div>
+		</div>
+		
+</div>
+</div>
+		
+<div class="stripe">
+	<div class="content">
+		<h3>Button 4 (Customizable)</h3>
+		<div class="section">
+			<div class="section">
+				<a href="javascript:alert('Infinite%20joy!')" class="button4" style="background-color:#f14e4e">Button 1</a>
+				<a href="javascript:alert('Infinite%20joy!')" class="button4" style="background-color:#f1bb4e">Button 2</a>
+				<a href="javascript:alert('Infinite%20joy!')" class="button4" style="background-color:#84f14e">Button 3</a>
+				<a href="javascript:alert('Infinite%20joy!')" class="button4" style="background-color:#4ef18f">Button 4</a>
+				<a href="javascript:alert('Infinite%20joy!')" class="button4" style="background-color:#4e9af1">Button 5</a>
+				<a href="javascript:alert('Infinite%20joy!')" class="button4" style="background-color:#9a4ef1">Button 6</a>
+				<a href="javascript:alert('Infinite%20joy!')" class="button4" style="background-color:#f14ebd">Button 7</a>
+			</div>
+			<h6>CSS</h6>
+			<div class="section">
+			<div class="code" id="b4c">
+				a.button4{<br>
+				 display:inline-block;<br>
+				 padding:0.3em 1.2em;<br>
+				 margin:0 0.1em 0.1em 0;<br>
+				 border:0.16em solid rgba(255,255,255,0);<br>
+				 border-radius:2em;<br>
+				 box-sizing: border-box;<br>
+				 text-decoration:none;<br>
+				 font-family:'Roboto',sans-serif;<br>
+				 font-weight:300;<br>
+				 color:#FFFFFF;<br>
+				 text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35);<br>
+				 text-align:center;<br>
+				 transition: all 0.2s;<br>
+				}<br>
+				a.button4:hover{<br>
+				 border-color: rgba(255,255,255,1);<br>
+				}<br>
+				@media all and (max-width:30em){<br>
+				 a.button4{<br>
+				  display:block;<br>
+				  margin:0.2em auto;<br>
+				 }<br>
+				}
+			</div>
+			<script type="text/javascript">highlight(I("b4c"),"css");</script>
+			</div>
+			<h6>HTML</h6>
+			<div class="section">
+			<div class="code" id="b4h">
+				&lt;a href="something" class="button4" style="background-color:#f14e4e"&gt;Button 1&amp;lt/a&gt;<br>
+				&lt;a href="something" class="button4" style="background-color:#f1bb4e"&gt;Button 2&amp;lt/a&gt;<br>
+				&lt;a href="something" class="button4" style="background-color:#84f14e"&gt;Button 3&amp;lt/a&gt;<br>
+				&lt;a href="something" class="button4" style="background-color:#4ef18f"&gt;Button 4&amp;lt/a&gt;<br>
+				&lt;a href="something" class="button4" style="background-color:#4e9af1"&gt;Button 5&amp;lt/a&gt;<br>
+				&lt;a href="something" class="button4" style="background-color:#9a4ef1"&gt;Button 6&amp;lt/a&gt;<br>
+				&lt;a href="something" class="button4" style="background-color:#f14ebd"&gt;Button 7&amp;lt/a&gt;
+			</div>
+			<script type="text/javascript">highlight(I("b4h"),"xml");</script>
+			</div>
+		</div>
+		
+</div>
+</div>
+		
+<div class="stripe">
+	<div class="content">
+		<h3>Button 5 (Customizable)</h3>
+		<div class="section">
+			<div class="section" style="font-size:1.5em; padding:4em 0.5em; background-image:url('html5cool/buttons/blueBk.png'); background-size:cover; text-align:center">
+				<a href="javascript:alert('Infinite%20joy!')" class="button5" style="background-color:#42cc8c;">Download</a>
+				<a href="javascript:alert('Needs%20more%20COC')" class="button5" style="border-color:#FFFFFF; background-color:rgba(0,0,0,0); color:#FFFFFF">View source code on SJWhub</a>
+			</div>
+			<h6>CSS</h6>
+			<div class="section">
+			<div class="code" id="b5c">
+				a.button5{<br>
+				 display:inline-block;<br>
+				 padding:0.46em 1.6em;<br>
+				 border:0.1em solid #000000;<br>
+				 margin:0 0.2em 0.2em 0;<br>
+				 border-radius:0.12em;<br>
+				 box-sizing: border-box;<br>
+				 text-decoration:none;<br>
+				 font-family:'Roboto',sans-serif;<br>
+				 font-weight:300;<br>
+				 color:#000000;<br>
+				 text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35);<br>
+				 background-color:#FFFFFF;<br>
+				 text-align:center;<br>
+				 transition: all 0.15s;<br>
+				}<br>
+				a.button5:hover{<br>
+				 text-shadow: 0 0 2em rgba(255,255,255,1);<br>
+				 color:#FFFFFF;<br>
+				 border-color:#FFFFFF;<br>
+				}<br>
+				@media all and (max-width:30em){<br>
+				 a.button5{<br>
+				  display:block;<br>
+				  margin:0.4em auto;<br>
+				 }<br>
+				}
+			</div>
+			<script type="text/javascript">highlight(I("b5c"),"css");</script>
+			</div>
+			<h6>HTML</h6>
+			<div class="section">
+			<div class="code" id="b5h">
+				&lt;div style="font-size:1.5em"&gt;<br>
+				 &lt;a href="something" class="button5" style="background-color:#42cc8c;"&gt;Download&amp;lt/a&gt;<br>
+				 &lt;a href="something" class="button5" style="border-color:#FFFFFF; background-color:rgba(0,0,0,0); color:#FFFFFF"&gt;View source code on SJWhub&amp;lt/a&gt;<br>
+				&lt;/div&gt;
+			</div>
+			<script type="text/javascript">highlight(I("b5h"),"xml");</script>
+			</div>
+		</div>
+		
+</div>
+</div>
+		
+		
+<div class="stripe">
+	<div class="content">
+		<h3>Button 6 (Customizable)</h3>
+		<div class="section">
+			<div class="section" style="background-color:#EEEEEE; padding:3em;">
+				<a href="javascript:alert('Infinite%20joy!')" class="button6">Ok</a>
+				<a href="javascript:alert('Infinite%20joy!')" class="button6" style="background-color:#668fff">Cancel</a>
+			</div>
+			<h6>CSS</h6>
+			<div class="section">
+			<div class="code" id="b6c">
+				a.button6{<br>
+				 display:inline-block;<br>
+				 padding:0.7em 1.4em;<br>
+				 margin:0 0.3em 0.3em 0;<br>
+				 border-radius:0.15em;<br>
+				 box-sizing: border-box;<br>
+				 text-decoration:none;<br>
+				 font-family:'Roboto',sans-serif;<br>
+				 text-transform:uppercase;<br>
+				 font-weight:400;<br>
+				 color:#FFFFFF;<br>
+				 background-color:#3369ff;<br>
+				 box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);<br>
+				 text-align:center;<br>
+				 position:relative;<br>
+				}<br>
+				a.button6:active{<br>
+				 top:0.1em;<br>
+				}<br>
+				@media all and (max-width:30em){<br>
+				 a.button6{<br>
+				  display:block;<br>
+				  margin:0.4em auto;<br>
+				 }<br>
+				}
+			</div>
+			<script type="text/javascript">highlight(I("b6c"),"css");</script>
+			</div>
+			<h6>HTML</h6>
+			<div class="section">
+			<div class="code" id="b6h">
+				&lt;a href="something" class="button6"&gt;Ok&amp;lt/a&gt;<br>
+				&lt;a href="something" class="button6" style="background-color:#668fff"&gt;Cancel&amp;lt/a&gt;<br>
+			</div>
+			<script type="text/javascript">highlight(I("b6h"),"xml");</script>
+			</div>
+		</div>
+		
+</div>
+</div>
+		
+		
+<div class="stripe">
+	<div class="content">
+		<h3>Button 7 (Customizable)</h3>
+		<div class="section">
+			<div class="section" style="background-color:#FFFFFF; padding:3em 1em;">
+				<a href="javascript:alert('Infinite%20joy!')" class="button7" style="background-color:#2979FF">Login</a>
+				<a href="javascript:alert('Infinite%20joy!')" class="button7" style="background-color:#CCCCCC; color:#000000">Register</a>
+				<br><br>
+				<a href="javascript:alert('Error:%20privilege%20not%20checked!')" class="button7" style="background-color:#a24dcc">
+					<span style="font-size:3em; font-family:'Comic Sans MS'; border-right:1px solid rgba(255,255,255,0.5); padding-right:0.3em; margin-right:0.3em; vertical-align:middle">J</span>
+					Login with your SJWhub account
+				</a>
+			</div>
+			<h6>CSS</h6>
+			<div class="section">
+			<div class="code" id="b7c">
+			a.button7{<br>
+			 display:inline-block;<br>
+			 padding:0.7em 1.7em;<br>
+			 margin:0 0.3em 0.3em 0;<br>
+			 border-radius:0.2em;<br>
+			 box-sizing: border-box;<br>
+			 text-decoration:none;<br>
+			 font-family:'Roboto',sans-serif;<br>
+			 font-weight:400;<br>
+			 color:#FFFFFF;<br>
+			 background-color:#3369ff;<br>
+			 box-shadow:inset 0 -0.6em 1em -0.35em rgba(0,0,0,0.17),inset 0 0.6em 2em -0.3em rgba(255,255,255,0.15),inset 0 0 0em 0.05em rgba(255,255,255,0.12);<br>
+			 text-align:center;<br>
+			 position:relative;<br>
+			}<br>
+			a.button7:active{<br>
+			 box-shadow:inset 0 0.6em 2em -0.3em rgba(0,0,0,0.15),inset 0 0 0em 0.05em rgba(255,255,255,0.12);<br>
+			}<br>
+			@media all and (max-width:30em){<br>
+			 a.button7{<br>
+			  display:block;<br>
+			  margin:0.4em auto;<br>
+			 }<br>
+			}
+			</div>
+			<script type="text/javascript">highlight(I("b7c"),"css");</script>
+			</div>
+			<h6>HTML</h6>
+			<div class="section">
+			<div class="code" id="b7h">
+				&lt;a href="something" class="button7" style="background-color:#2979FF"&gt;Login&amp;lt/a&gt;<br>
+				&lt;a href="something" class="button7" style="background-color:#CCCCCC; color:#000000"&gt;Register&amp;lt/a&gt;<br>
+				&lt;br/&gt;&lt;br/&gt;<br>
+				&lt;a href="something" class="button7" style="background-color:#a24dcc"&gt;<br>
+				 &lt;span style="font-size:3em; font-family:'Comic Sans MS'; border-right:1px solid rgba(255,255,255,0.5); padding-right:0.3em; margin-right:0.3em; vertical-align:middle"&gt;J&lt;/span&gt;<br>
+				 Login with your SJWhub account<br>
+				&lt;/a&gt;
+			</div>
+			<script type="text/javascript">highlight(I("b7h"),"xml");</script>
+			</div>
+		</div>
+		
+</div>
+</div>
+
+<div class="stripe">
+	<div class="content">
+		<h3>Button 8</h3>
+		<div class="section">
+			<div class="section" style="background-color:#FFFFFF; padding:3em 1em;">
+				<a href="javascript:alert('Infinite%20joy!')" class="button8">New document</a>
+				<a href="javascript:alert('Infinite%20joy!')" class="button8">Cancel</a>
+			</div>
+			<h6>CSS</h6>
+			<div class="section">
+			<div class="code" id="b8c">
+			a.button8{<br>
+			 display:inline-block;<br>
+			 padding:0.2em 1.45em;<br>
+			 margin:0.1em;<br>
+			 border:0.15em solid #CCCCCC;<br>
+			 box-sizing: border-box;<br>
+			 text-decoration:none;<br>
+			 font-family:'Segoe UI','Roboto',sans-serif;<br>
+			 font-weight:400;<br>
+			 color:#000000;<br>
+			 background-color:#CCCCCC;<br>
+			 text-align:center;<br>
+			 position:relative;<br>
+			}<br>
+			a.button8:hover{<br>
+			 border-color:#7a7a7a;<br>
+			}<br>
+			a.button8:active{<br>
+			 background-color:#999999;<br>
+			}<br>
+			@media all and (max-width:30em){<br>
+			 a.button8{<br>
+			  display:block;<br>
+			  margin:0.2em auto;<br>
+			 }<br>
+			}
+			</div>
+			<script type="text/javascript">highlight(I("b8c"),"css");</script>
+			</div>
+			<h6>HTML</h6>
+			<div class="section">
+			<div class="code" id="b8h">
+				&lt;a href="something" class="button8"&gt;New document&amp;lt/a&gt;<br>
+				&lt;a href="something" class="button8"&gt;Cancel&amp;lt/a&gt;
+			</div>
+			<script type="text/javascript">highlight(I("b8h"),"xml");</script>
+			</div>
+		</div>
+		
+</div>
+</div>
+		
+<div class="stripe">
+	<div class="content">
+		<h3>Idle amination: bouncy bouncy</h3>
+		<p>
+			You can apply this animation to all the buttons shown before.
+		</p>
+		<div class="section">
+			<div class="section" style="padding-top:1em">
+				<a href="javascript:alert('Infinite%20joy!')" class="button1 bouncy">Facebark</a>
+				<a href="javascript:alert('TRIGGER%20WARNING')" class="button1 bouncy" style="animation-delay:0.07s">SJWHub</a>
+				<a href="javascript:alert('Infinite%20joy!')" class="button1 bouncy" style="animation-delay:0.14s">Plebbit</a>
+				<a href="javascript:alert('Infinite%20joy!')" class="button1 bouncy" style="animation-delay:0.21s">4chin</a>
+			</div>
+			<h6>CSS</h6>
+			<div class="section">
+			<div class="code" id="bbc">
+				.bouncy{<br>
+				 animation:bouncy 5s infinite linear;<br>
+				 position:relative;<br>
+				}<br>
+				@keyframes bouncy {<br>
+				 0%{top:0em}<br>
+				 40%{top:0em}<br>
+				 43%{top:-0.9em}<br>
+				 46%{top:0em}<br>
+				 48%{top:-0.4em}<br>
+				 50%{top:0em}<br>
+				 100%{top:0em;}<br>
+				}
+			</div>
+			<script type="text/javascript">highlight(I("bbc"),"css");</script>
+			</div>
+			<h6>HTML</h6>
+			<div class="section">
+			<div class="code" id="bbh">
+				&lt;a href="something" class="button1 bouncy"&gt;Facebark&lt;/a&gt;<br>
+				&lt;a href="something" class="button1 bouncy" style="animation-delay:0.07s"&gt;SJWHub&lt;/a&gt;<br>
+				&lt;a href="something" class="button1 bouncy" style="animation-delay:0.14s"&gt;Plebbit&lt;/a&gt;<br>
+				&lt;a href="something" class="button1 bouncy" style="animation-delay:0.21s"&gt;4chin&lt;/a&gt;<br>
+			</div>
+			<script type="text/javascript">highlight(I("bbh"),"xml");</script>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="stripe">
+	<div class="content">
+		<h3>Share this article</h3>
+		<div id="_share_"></div>
+	</div>
+</div>
+<div class="stripe">
+	<div class="content">
+		<h3>Comments</h3>
+		<div id="_comments_"></div>
+	</div>
+</div>
+</div>
+</div>			<div id="footer">
+			<html><body>
+<div class="content">
+	©2015-2020 Federico Dossena, all rights reserved. <a onclick="loadFragment('privacy/index.frag');return false;" href="/?p=privacy/index.frag">Privacy Policy</a>
+</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		var oldC=I("_comments_");
+		if(oldC)oldC.id="article_comments";
+		var c=I("article_comments");
+		if(c)createCommentsForm('html5cool/buttons/i.frag',c);
+		var s=I("_share_");
+		if(s){
+			url=document.location.href;
+			s.innerHTML="";
+			var eurl=encodeURIComponent(url);
+			var a=document.createElement("a");
+			a.className="share share_fb";
+			a.target="_blank";
+			a.href="https://www.facebook.com/sharer/sharer.php?u="+eurl;
+			s.appendChild(a);
+			a=document.createElement("a");
+			a.className="share share_tw";
+			a.target="_blank";
+			a.href="https://twitter.com/home?status="+eurl;
+			s.appendChild(a);
+			a=document.createElement("a");
+			a.className="share share_gplus";
+			a.target="_blank";
+			a.href="https://plus.google.com/share?url="+eurl;
+			s.appendChild(a);
+			a=document.createElement("input");
+			a.type="text";
+			a.className="share share_link";
+			a.value=url;
+			a.onclick=a.select;
+			s.appendChild(a);
+		}
+		var aTitle=I("_articleTitle_");
+		if(aTitle)aTitle.id="article_title";
+		aTitle=I("article_title");
+		if(aTitle){
+			aTitle.innerHTML="Cool and responsive buttons with a few lines of CSS";
+		}
+		var latest=I("_latestPost_");
+		if(latest){
+			var xlp=window.XMLHttpRequest?new XMLHttpRequest():new ActiveXObject("Microsoft.XMLHTTP");
+			xlp.onreadystatechange=function(){
+				if(xlp.readyState==4){
+					if(xlp.status==200){
+						latest.innerHTML=xlp.responseText;
+					}
+				}
+			}
+			xlp.open("GET","articles.php?lastPost=true&random="+Math.random());
+			xlp.send();
+		}
+		var featured=I("_featuredPost_");
+		if(featured){
+			var xlp2=window.XMLHttpRequest?new XMLHttpRequest():new ActiveXObject("Microsoft.XMLHTTP");
+			xlp2.onreadystatechange=function(){
+				if(xlp2.readyState==4){
+					if(xlp2.status==200){
+						featured.innerHTML=xlp2.responseText;
+					}
+				}
+			}
+			xlp2.open("GET","articles.php?lastPost=featured&forceBasicMode=true&random="+Math.random());
+			xlp2.send();
+		}		
+	</script>
+	<div id="resp_test">&nbsp;</div>
+</body>
+</html>

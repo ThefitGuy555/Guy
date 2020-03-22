@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>CSS Template</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+
+        }
+
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: black;
+        }
+
+
+        header {
+            background-color: black;
+            padding: 30px;
+            text-align: center;
+            font-size: 35px;
+            color: pink;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+        }
+
+
+        section {
+            display: -webkit-flex;
+            display: flex;
+        }
+
+        nav {
+            float: left;
+            width: 20%;
+            height: 800px;
+            background-color: black;
+            padding: 50px;
+            font-size: x-large;
+
+        }
+
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            border-style: groove;
+        }
+
+        article {
+            float: left;
+            padding: 0px;
+            width: 100%;
+            background-color: black;
+        }
+
+
+        footer {
+            background-color: black;
+            padding: 10px;
+            text-align: center;
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            section {
+                -webkit-flex-direction: column;
+                flex-direction: column;
+            }
+        }
+
+        ul {
+            color: pink;
+            padding: 30px;
+            text-align: center;
+        }
+
+        li {
+            float: center;
+            padding: 30px;
+        }
+
+        li a {
+            display: block;
+            color: pink;
+            text-decoration: none;
+            padding: 30px;
+        }
+
+
+        .hvr-grow {
+            display: inline-block;
+            vertical-align: middle;
+            -webkit-transform: perspective(1px) translateZ(0);
+            transform: perspective(1px) translateZ(0);
+            box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+            -webkit-transition-duration: 0.3s;
+            transition-duration: 0.3s;
+            -webkit-transition-property: transform;
+            transition-property: transform;
+        }
+
+        .hvr-grow:hover,
+        .hvr-grow:focus,
+        .hvr-grow:active {
+            -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+        }
+
+        }
+
+        #rcorners2 {
+            border-radius: 25px;
+            border: 2px solid #73AD21;
+            padding: 20px;
+            width: 200px;
+            height: 150px;
+        }
+
+        .center {
+            margin: auto;
+            width: 60%;
+            padding: 10px;
+            background-image: black;
+        }
+
+        a.button2 {
+            display: inline-block;
+            padding: 0.5em 3em;
+            border: 0.16em solid #FFFFFF;
+            margin: 0 0.3em 0.3em 0;
+            box-sizing: border-box;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 400;
+            color: #FFFFFF;
+            text-align: center;
+            transition: all 0.15s;
+        }
+
+        a.button2:hover {
+            color: #DDDDDD;
+            border-color: #DDDDDD;
+        }
+
+        a.button2:active {
+            color: #BBBBBB;
+            border-color: #BBBBBB;
+        }
+
+        @media all and (max-width:30em) {
+            a.button2 {
+                display: block;
+                margin: 0.4em auto;
+            }
+        }
+    </style>
+       <script> 
+        function mouseover() { 
+            document.getElementById("gfg").style.color = "red"; 
+        } 
+          
+        function mouseout() { 
+            document.getElementById("gfg").style.color = "green"; 
+        } 
+    </script> 
+
+</head>
+
+<body>
+
+
+
+    <header>
+        <a href="/pages/index.html">
+        <img src="/images/sg50.png" width="80%" style="max-width:100%;height:auto;">
+        </a>
+
+        <h2>Welcome to the Sg50 online !</h2>
+    </header>
+
+    <section>
+        <nav class="groove">
+            <ul>
+                <li style="text-align:left; font-size:30px" class="hvr-grow"><a target="_blank"
+                        href="/pages/Nutrition.html"><strong>Nutrition</strong></a></li>
+                <br>
+                <br>
+                <li style="text-align:left; font-size:30px" class="hvr-grow"><a href="#"><strong>Training</strong></a>
+                </li>
+                <br>
+                <br>
+                <li style="text-align:left; font-size:30px" class="hvr-grow"><a href="#"><strong>About</strong></a></li>
+                <br>
+                <br>
+                <li style="text-align:left; font-size:30px" class="hvr-grow"><a href="#"><strong>Resaults</strong></a>
+                </li>
+                <br>
+                <br>
+                <li style="text-align:left; font-size:30px" class="hvr-grow"><a href="#"><strong>Contacts</strong></a>
+                </li>
+
+            </ul>
+        </nav>
+
+        <article>
+            <h1 font-family="Comic Sans MS">Welcome to the SG50 online !</h1>
+            <p style="font-size: 30px; color:pink; padding-bottom: 0px; font-family:sans-serif;"><i>The new way to the dreams body you've always wanted!<br>
+                    We believe our program is not just a training program or
+                    a diet menu, <strong class="hvr-grow">It's a LifeStyle!</strong><br><br>
+                    Now it's the time to start the journey to a healthier life, with a customized diet plan, customized
+                    and dynamic
+                    training programs that renew each week, and above all:<br><br>
+                    Live Channel 24 \ 7 with our mentors Via WhatsApp, Email or Any Way You Choose!<br><br>
+
+                    Check our free diet & training plan and let's go !</i></p>
+
+            <iframe width="1600" height="600" src="https://www.youtube.com/embed/Jyeg5zevJvg?autoplay=1;controls=0;">
+            </iframe>
+
+        </article>
+    </section>
+
+    <figure>
+        <img src="/images/sg15.png" alt="sg15" usemap="#sg15" width="1800" height="1100">
+        <map name="sg15">
+            <area shape="rect" coords="400,400,2000,1500" alt="sgtube"
+                href="https://www.youtube.com/channel/UCqJLgrJbz-s1rIN-vwPbJZA?autoplay=1" target="_blank" ;>
+        </map>
+        <figcaption style="color:white;">{Press on TheSg50 Logo to go to Youtube Channel}</figcaption><i
+            class="fa fa-youtube-play" style="font-size:48px;color:red"></i>
+        <figure>
+
+            <footer>
+                <div class="center"
+                    style="font-style:italic;background-color: black; color:palevioletred; text-align: center; font-size: 20px; width: 50%;">
+                    <form action="/action_page.php" autocomplete="off">
+                        <label for="email" font-family:sans-serif;>Subscribe to Our NewsLetter:</label>
+                        <input class="w3-input w3-border w3-round-xxlarge" type="email" id="email" name="email"><br>
+                        <a href="something" class="button2">submit</a>
+                    </form>
+                </div>
+            </footer>
+
+</body>
+
+</html>
